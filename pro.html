@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAMA ZONE</title>
+  <link rel="stylesheet" href="pro.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1 class="logo">bamazone</h1>
+    <div class="search-box">
+      <select id="category-filter">
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="books">Books</option>
+        <option value="clothing">Clothing</option>
+        <option value="home">Home & Kitchen</option>
+      </select>
+      <input type="text" id="search-input" placeholder="Search Amazon" />
+      <button id="search-btn">🔍</button>
+    </div>
+    <div class="cart" id="cart-btn">🛒 <span id="cart-count">0</span></div>
+  </header>
+
+  <!-- Banner -->
+  <section class="banner">Welcome to Bamazone</section>
+
+  <!-- Products -->
+  <main class="products" id="products"></main>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="cart-close">&times;</span>
+      <h2>Your Cart</h2>
+      <div id="cart-items"></div>
+      <div class="cart-total" id="cart-total">Total: ₹0</div>
+      <button id="checkout-btn">Checkout</button>
+    </div>
+  </div>
+
+  <!-- Product Details Modal -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="product-close">&times;</span>
+      <div id="product-details" class="product-details"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">© 2026 Bamazone (Frontend Only)</footer>
+
+  <script src="pro.js"></script>
+</body>
+</html>
