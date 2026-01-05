@@ -865,6 +865,13 @@ body {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+
+.product button:first-of-type {
+  margin-top: auto;
 }
 
 .product img {
@@ -873,6 +880,10 @@ body {
 
 .product h3 {
   font-size: 16px;
+}
+
+.product s {
+  color: red;
 }
 
 .product button {
