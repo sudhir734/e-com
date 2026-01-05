@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,23 +10,260 @@
 <body>
   <!-- Header -->
   <header class="header">
-    <h1 class="logo">bamazone</h1>
-    <div class="search-box">
-      <select id="category-filter">
-        <option value="all">All Categories</option>
-        <option value="electronics">Electronics</option>
-        <option value="books">Books</option>
-        <option value="clothing">Clothing</option>
-        <option value="home">Home & Kitchen</option>
-      </select>
-      <input type="text" id="search-input" placeholder="Search Amazon" />
-      <button id="search-btn">🔍</button>
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+      <div class="nav-left">
+        <div class="hamburger-menu" id="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="logo-container">
+          <h1 class="logo">bamazone</h1>
+          <span class="logo-subtitle">.com</span>
+        </div>
+      </div>
+
+      <div class="search-container">
+        <div class="search-box">
+          <select id="category-filter" class="category-dropdown">
+            <option value="all">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="books">Books</option>
+            <option value="clothing">Clothing</option>
+            <option value="home">Home & Kitchen</option>
+            <option value="sports">Sports & Outdoors</option>
+            <option value="beauty">Beauty & Personal Care</option>
+          </select>
+          <input type="text" id="search-input" placeholder="Search Bamazone" autocomplete="off" />
+          <button id="search-btn" class="search-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 21L16.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11 11H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button id="voice-search-btn" class="voice-search-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 1C10.3431 1 9 2.34315 9 4V12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12V4C15 2.34315 13.6569 1 12 1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19 10V12C19 16.4183 15.4183 20 11 20C6.58172 20 3 16.4183 3 12V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 20V23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 23H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="advanced-search-btn" class="advanced-search-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 4.5H21M3 9H21M3 13.5H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="search-suggestions" id="search-suggestions"></div>
+        <div class="advanced-search-panel" id="advanced-search-panel">
+          <div class="search-filters">
+            <div class="filter-group">
+              <label for="price-min">Min Price:</label>
+              <input type="number" id="price-min" placeholder="0" min="0">
+            </div>
+            <div class="filter-group">
+              <label for="price-max">Max Price:</label>
+              <input type="number" id="price-max" placeholder="5000" min="0">
+            </div>
+            <div class="filter-group">
+              <label for="sort-by">Sort by:</label>
+              <select id="sort-by">
+                <option value="relevance">Relevance</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="search-in">Search in:</label>
+              <select id="search-in">
+                <option value="all">All Fields</option>
+                <option value="name">Product Name</option>
+                <option value="description">Description</option>
+              </select>
+            </div>
+          </div>
+          <div class="recent-searches" id="recent-searches">
+            <h4>Recent Searches</h4>
+            <div id="recent-searches-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="nav-item account-dropdown">
+          <button class="nav-link account-btn">
+            <span class="account-icon">👤</span>
+            <span class="account-text">Hello, Sign in</span>
+            <span class="account-arrow">▼</span>
+          </button>
+          <div class="dropdown-menu account-menu">
+            <div class="dropdown-section">
+              <button class="dropdown-item sign-in-btn">
+                <strong>Sign in</strong>
+                <div class="dropdown-subtitle">Account & Lists</div>
+              </button>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item">Your Account</button>
+              <button class="dropdown-item">Your Orders</button>
+              <button class="dropdown-item">Your Lists</button>
+              <button class="dropdown-item">Your Recommendations</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <button class="nav-link returns-btn">
+            <span class="returns-text">Returns</span>
+            <span class="returns-arrow">& Orders</span>
+          </button>
+        </div>
+
+        <div class="nav-item cart-container">
+          <button class="cart-btn" id="cart-btn">
+            <span class="cart-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 22C7.89543 22 7 21.1046 7 20V10C7 8.89543 7.89543 8 9 8H15C16.1046 8 17 8.89543 17 10V20C17 21.1046 16.1046 22 15 22H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 10H21L19 4H5L3 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="cart-count" id="cart-count">0</span>
+            </span>
+            <span class="cart-text">Cart</span>
+          </button>
+        </div>
+
+        <button id="dark-mode-toggle" class="dark-mode-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
     </div>
-    <div class="cart" id="cart-btn">🛒 <span id="cart-count">0</span></div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+      <div class="nav-links">
+        <button class="nav-link location-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
+          </svg>
+          <span>Deliver to User</span>
+        </button>
+
+        <div class="nav-item mega-menu-container">
+          <button class="nav-link shop-all-btn">
+            All
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="mega-menu">
+            <div class="mega-menu-content">
+              <div class="mega-column">
+                <h4>Shop by Department</h4>
+                <a href="#" class="mega-link">Electronics</a>
+                <a href="#" class="mega-link">Computers</a>
+                <a href="#" class="mega-link">Smart Home</a>
+                <a href="#" class="mega-link">Arts & Crafts</a>
+                <a href="#" class="mega-link">Automotive</a>
+                <a href="#" class="mega-link">Baby</a>
+                <a href="#" class="mega-link">Beauty & Personal Care</a>
+                <a href="#" class="mega-link">Books</a>
+                <a href="#" class="mega-link">Boys' Fashion</a>
+                <a href="#" class="mega-link">Girls' Fashion</a>
+              </div>
+              <div class="mega-column">
+                <h4>Programs & Features</h4>
+                <a href="#" class="mega-link">Gift Cards</a>
+                <a href="#" class="mega-link">Shop By Interest</a>
+                <a href="#" class="mega-link">Amazon Live</a>
+                <a href="#" class="mega-link">International Shopping</a>
+                <a href="#" class="mega-link">Amazon Business</a>
+                <h4>Help & Settings</h4>
+                <a href="#" class="mega-link">Your Account</a>
+                <a href="#" class="mega-link">English</a>
+                <a href="#" class="mega-link">United States</a>
+                <a href="#" class="mega-link">Customer Service</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="nav-link">Today's Deals</a>
+        <a href="#" class="nav-link">Customer Service</a>
+        <a href="#" class="nav-link">Registry</a>
+        <a href="#" class="nav-link">Gift Cards</a>
+        <a href="#" class="nav-link">Sell</a>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+      <div class="mobile-menu">
+        <div class="mobile-menu-header">
+          <div class="mobile-user-info">
+            <span class="mobile-user-icon">👤</span>
+            <span>Hello, Sign in</span>
+          </div>
+          <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
+        </div>
+        <div class="mobile-menu-content">
+          <div class="mobile-menu-section">
+            <h3>Shop by Department</h3>
+            <a href="#" class="mobile-menu-link">Electronics</a>
+            <a href="#" class="mobile-menu-link">Books</a>
+            <a href="#" class="mobile-menu-link">Clothing</a>
+            <a href="#" class="mobile-menu-link">Home & Kitchen</a>
+            <a href="#" class="mobile-menu-link">Sports & Outdoors</a>
+          </div>
+          <div class="mobile-menu-section">
+            <h3>Programs & Features</h3>
+            <a href="#" class="mobile-menu-link">Gift Cards</a>
+            <a href="#" class="mobile-menu-link">Amazon Live</a>
+            <a href="#" class="mobile-menu-link">International Shopping</a>
+          </div>
+          <div class="mobile-menu-section">
+            <h3>Settings</h3>
+            <a href="#" class="mobile-menu-link">Your Account</a>
+            <a href="#" class="mobile-menu-link">Customer Service</a>
+            <a href="#" class="mobile-menu-link">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- Banner -->
   <section class="banner">Welcome to Bamazone</section>
+  <div class="slideshow-container">
+
+  <!-- Full-width images with number and caption text -->
+  <div class="mySlides fade">
+    <div class="numbertext">1 / 2</div>
+    <img src="360_F_249501541_XmWdfAfUbWAvGxBwAM0ba2aYT36ntlpH.jpg" style="width:100%">
+    <div class="text">Welcome to Bamazone</div>
+  </div>
+
+  <div class="mySlides fade">
+    <div class="numbertext">2 / 2</div>
+    <img src="360_F_465465254_1pN9MGrA831idD6zIBL7q8rnZZpUCQTy.jpg" style="width:100%">
+    <div class="text">Shop with Confidence</div>
+  </div>
+
+  <!-- Next and previous buttons -->
+  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+
+<!-- The dots/circles -->
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+</div>
 
   <!-- Products -->
   <main class="products" id="products"></main>
@@ -50,7 +288,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="footer">© 2026 Bamazone (Frontend Only)</footer>
+  <footer class="footer">© 2026 Bamazone</footer>
 
   <script src="pro.js"></script>
 </body>
