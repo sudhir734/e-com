@@ -1,3 +1,4 @@
+
 // Expanded product list with categories
 const products = [
   { id: 1, name: "Wireless Bluetooth Headphones", price: 2999, category: "electronics", image: "shopping.avif", description: "High-quality wireless headphones with noise cancellation." },
@@ -21,7 +22,15 @@ const productsDiv = document.getElementById("products");
 const cartCountSpan = document.getElementById("cart-count");
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
+const voiceSearchBtn = document.getElementById("voice-search-btn");
+const advancedSearchBtn = document.getElementById("advanced-search-btn");
+const advancedSearchPanel = document.getElementById("advanced-search-panel");
 const categoryFilter = document.getElementById("category-filter");
+const priceMinInput = document.getElementById("price-min");
+const priceMaxInput = document.getElementById("price-max");
+const sortBySelect = document.getElementById("sort-by");
+const searchInSelect = document.getElementById("search-in");
+const recentSearchesList = document.getElementById("recent-searches-list");
 const cartBtn = document.getElementById("cart-btn");
 const cartModal = document.getElementById("cart-modal");
 const cartClose = document.getElementById("cart-close");
@@ -31,12 +40,18 @@ const checkoutBtn = document.getElementById("checkout-btn");
 const productModal = document.getElementById("product-modal");
 const productClose = document.getElementById("product-close");
 const productDetailsDiv = document.getElementById("product-details");
+const darkModeToggle = document.getElementById("dark-mode-toggle");
+
+let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
 
 // Initialize the app
 function init() {
   updateCartCount();
   renderProducts(filteredProducts);
   setupEventListeners();
+  loadDarkMode();
+  addTooltips();
+  addLoadingStates();
 }
 
 // Setup event listeners
@@ -45,15 +60,54 @@ function setupEventListeners() {
   searchInput.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') handleSearch();
   });
+  searchInput.addEventListener('input', showSearchSuggestions);
+  voiceSearchBtn.addEventListener('click', handleVoiceSearch);
+  advancedSearchBtn.addEventListener('click', toggleAdvancedSearchPanel);
   categoryFilter.addEventListener('change', handleCategoryFilter);
+  priceMinInput.addEventListener('input', applyAdvancedFilters);
+  priceMaxInput.addEventListener('input', applyAdvancedFilters);
+  sortBySelect.addEventListener('change', applyAdvancedFilters);
+  searchInSelect.addEventListener('change', applyAdvancedFilters);
   cartBtn.addEventListener('click', openCartModal);
   cartClose.addEventListener('click', closeCartModal);
   productClose.addEventListener('click', closeProductModal);
   checkoutBtn.addEventListener('click', handleCheckout);
+
+  // Mobile menu event listeners
+  const hamburgerMenu = document.getElementById('hamburger-menu');
+  const mobileMenuClose = document.getElementById('mobile-menu-close');
+  const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+  if (hamburgerMenu) {
+    hamburgerMenu.addEventListener('click', toggleMobileMenu);
+  }
+  if (mobileMenuClose) {
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+  }
+  if (mobileMenuOverlay) {
+    mobileMenuOverlay.addEventListener('click', (e) => {
+      if (e.target === mobileMenuOverlay) closeMobileMenu();
+    });
+  }
+
+  // Dark mode toggle
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+  }
+
+  // Hide search suggestions and advanced panel when clicking outside
+  document.addEventListener('click', (e) => {
+    hideSearchSuggestions(e);
+    hideAdvancedSearchPanel(e);
+  });
+
   window.addEventListener('click', (e) => {
     if (e.target === cartModal) closeCartModal();
     if (e.target === productModal) closeProductModal();
   });
+
+  // Initialize recent searches display
+  renderRecentSearches();
 }
 
 // Handle search functionality
@@ -64,6 +118,74 @@ function handleSearch() {
     product.description.toLowerCase().includes(query)
   );
   renderProducts(filteredProducts);
+}
+
+// Handle voice search functionality
+function handleVoiceSearch() {
+  // Check if running on HTTPS (required for speech recognition in most browsers)
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    alert('Voice search requires HTTPS. Please access the site over HTTPS or use localhost.');
+    return;
+  }
+
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Voice search is not supported in this browser. Please use Chrome, Edge, or Safari.');
+    return;
+  }
+
+  try {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+      voiceSearchBtn.textContent = '🎤 Listening...';
+      voiceSearchBtn.disabled = true;
+      showNotification('Listening... Speak now');
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim();
+      if (transcript) {
+        searchInput.value = transcript;
+        handleSearch();
+        showNotification(`Searching for: "${transcript}"`);
+      } else {
+        showNotification('No speech detected. Please try again.');
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      let errorMessage = 'Voice search failed. ';
+      switch(event.error) {
+        case 'not-allowed':
+          errorMessage += 'Microphone permission denied. Please allow microphone access.';
+          break;
+        case 'no-speech':
+          errorMessage += 'No speech detected. Please try again.';
+          break;
+        case 'network':
+          errorMessage += 'Network error. Check your connection.';
+          break;
+        default:
+          errorMessage += 'Please try again.';
+      }
+      showNotification(errorMessage);
+    };
+
+    recognition.onend = () => {
+      voiceSearchBtn.textContent = '🎤';
+      voiceSearchBtn.disabled = false;
+    };
+
+    recognition.start();
+  } catch (error) {
+    console.error('Speech recognition setup error:', error);
+    showNotification('Voice search is not available. Please use text search.');
+  }
 }
 
 // Handle category filtering
@@ -255,5 +377,299 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// Dark mode functionality
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+  localStorage.setItem('darkMode', isDarkMode);
+}
+
+function loadDarkMode() {
+  const isDarkMode = localStorage.getItem('darkMode') === 'true';
+  if (isDarkMode) {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.textContent = '☀️';
+  }
+}
+
+// Slideshow variables
+let slideIndex = 1;
+let slideInterval;
+
+// Slideshow functions
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+}
+
+// Auto slideshow every 10 seconds
+function startSlideshow() {
+  showSlides(slideIndex);
+  slideInterval = setInterval(() => {
+    plusSlides(1);
+  }, 10000); // 10 seconds
+}
+
+// Add tooltips to buttons
+function addTooltips() {
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach(button => {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.textContent = button.textContent;
+    button.appendChild(tooltip);
+
+    button.addEventListener('mouseenter', () => {
+      tooltip.style.opacity = '1';
+      tooltip.style.visibility = 'visible';
+    });
+
+    button.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+      tooltip.style.visibility = 'hidden';
+    });
+  });
+}
+
+// Add loading states
+function addLoadingStates() {
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      if (!button.classList.contains('loading')) {
+        // Store original innerHTML if not already stored
+        if (!button.dataset.originalHtml) {
+          button.dataset.originalHtml = button.innerHTML;
+        }
+        button.classList.add('loading');
+        button.innerHTML = '<div class="spinner"></div> Loading...';
+
+        setTimeout(() => {
+          button.classList.remove('loading');
+          button.innerHTML = button.dataset.originalHtml;
+        }, 2000);
+      }
+    });
+  });
+}
+
+// Mobile menu functions
+function toggleMobileMenu() {
+  const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+  if (mobileMenuOverlay) {
+    mobileMenuOverlay.classList.add('show');
+  }
+}
+
+function closeMobileMenu() {
+  const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+  if (mobileMenuOverlay) {
+    mobileMenuOverlay.classList.remove('show');
+  }
+}
+
+// Search suggestions functionality
+function showSearchSuggestions() {
+  const query = searchInput.value.toLowerCase().trim();
+  const suggestionsDiv = document.getElementById('search-suggestions');
+
+  if (!suggestionsDiv) return;
+
+  if (query.length < 2) {
+    suggestionsDiv.classList.remove('show');
+    return;
+  }
+
+  // Get matching products and categories
+  const matchingProducts = products.filter(product =>
+    product.name.toLowerCase().includes(query) ||
+    product.description.toLowerCase().includes(query)
+  ).slice(0, 5);
+
+  const categories = [...new Set(products.map(p => p.category))].filter(cat =>
+    cat.toLowerCase().includes(query)
+  );
+
+  let suggestionsHTML = '';
+
+  // Add category suggestions
+  if (categories.length > 0) {
+    suggestionsHTML += '<div class="suggestion-section"><h4>Categories</h4>';
+    categories.forEach(category => {
+      suggestionsHTML += `<div class="suggestion-item" data-type="category" data-value="${category}">${category.charAt(0).toUpperCase() + category.slice(1)}</div>`;
+    });
+    suggestionsHTML += '</div>';
+  }
+
+  // Add product suggestions
+  if (matchingProducts.length > 0) {
+    suggestionsHTML += '<div class="suggestion-section"><h4>Products</h4>';
+    matchingProducts.forEach(product => {
+      suggestionsHTML += `<div class="suggestion-item" data-type="product" data-value="${product.id}">${product.name}</div>`;
+    });
+    suggestionsHTML += '</div>';
+  }
+
+  if (suggestionsHTML) {
+    suggestionsDiv.innerHTML = suggestionsHTML;
+    suggestionsDiv.classList.add('show');
+
+    // Add click handlers for suggestions
+    const suggestionItems = suggestionsDiv.querySelectorAll('.suggestion-item');
+    suggestionItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const type = item.dataset.type;
+        const value = item.dataset.value;
+
+        if (type === 'category') {
+          categoryFilter.value = value;
+          handleCategoryFilter();
+        } else if (type === 'product') {
+          showProductDetails(parseInt(value));
+        }
+
+        searchInput.value = item.textContent;
+        suggestionsDiv.classList.remove('show');
+      });
+    });
+  } else {
+    suggestionsDiv.classList.remove('show');
+  }
+}
+
+function hideSearchSuggestions(e) {
+  const suggestionsDiv = document.getElementById('search-suggestions');
+  const searchContainer = document.querySelector('.search-container');
+
+  if (suggestionsDiv && searchContainer && !searchContainer.contains(e.target)) {
+    suggestionsDiv.classList.remove('show');
+  }
+}
+
+// Advanced search functionality
+function toggleAdvancedSearchPanel() {
+  advancedSearchPanel.classList.toggle('show');
+}
+
+function hideAdvancedSearchPanel(e) {
+  if (advancedSearchPanel && !advancedSearchPanel.contains(e.target) && e.target !== advancedSearchBtn) {
+    advancedSearchPanel.classList.remove('show');
+  }
+}
+
+function applyAdvancedFilters() {
+  const minPrice = parseFloat(priceMinInput.value) || 0;
+  const maxPrice = parseFloat(priceMaxInput.value) || Infinity;
+  const sortBy = sortBySelect.value;
+  const searchIn = searchInSelect.value;
+  const query = searchInput.value.toLowerCase();
+
+  // Start with all products
+  let filtered = [...products];
+
+  // Apply search query based on search scope
+  if (query) {
+    if (searchIn === 'name') {
+      filtered = filtered.filter(product => product.name.toLowerCase().includes(query));
+    } else if (searchIn === 'description') {
+      filtered = filtered.filter(product => product.description.toLowerCase().includes(query));
+    } else if (searchIn === 'all') {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query)
+      );
+    }
+  }
+
+  // Apply price filter
+  filtered = filtered.filter(product => product.price >= minPrice && product.price <= maxPrice);
+
+  // Apply category filter
+  const category = categoryFilter.value;
+  if (category !== 'all') {
+    filtered = filtered.filter(product => product.category === category);
+  }
+
+  // Apply sorting
+  if (sortBy === 'price-low') {
+    filtered.sort((a, b) => a.price - b.price);
+  } else if (sortBy === 'price-high') {
+    filtered.sort((a, b) => b.price - a.price);
+  } else if (sortBy === 'name') {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  filteredProducts = filtered;
+  renderProducts(filteredProducts);
+}
+
+// Recent searches functionality
+function addToRecentSearches(query) {
+  if (!query.trim()) return;
+
+  // Remove if already exists
+  recentSearches = recentSearches.filter(item => item !== query);
+
+  // Add to beginning
+  recentSearches.unshift(query);
+
+  // Keep only last 5
+  recentSearches = recentSearches.slice(0, 5);
+
+  // Save to localStorage
+  localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+
+  // Re-render recent searches
+  renderRecentSearches();
+}
+
+function renderRecentSearches() {
+  recentSearchesList.innerHTML = '';
+
+  recentSearches.forEach(search => {
+    const item = document.createElement('div');
+    item.className = 'recent-search-item';
+    item.textContent = search;
+    item.addEventListener('click', () => {
+      searchInput.value = search;
+      handleSearch();
+      advancedSearchPanel.classList.remove('show');
+    });
+    recentSearchesList.appendChild(item);
+  });
+}
+
+// Update handleSearch to include advanced filters and recent searches
+function handleSearch() {
+  const query = searchInput.value.toLowerCase();
+
+  // Add to recent searches
+  addToRecentSearches(searchInput.value);
+
+  // Apply advanced filters
+  applyAdvancedFilters();
+}
+
 // Initialize the app
 init();
+startSlideshow();
