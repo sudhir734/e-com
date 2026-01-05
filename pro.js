@@ -3,16 +3,24 @@
 const products = [
   { id: 1, name: "Wireless Bluetooth Headphones", price: 2999, category: "electronics", image: "shopping.avif", description: "High-quality wireless headphones with noise cancellation." },
   { id: 2, name: "Smartphone Case", price: 499, category: "electronics", image: "images.jpg", description: "Protective case for your smartphone." },
-  { id: 3, name: "JavaScript Programming Book", price: 1499, category: "books", image: "https://via.placeholder.com/200x150?text=JS+Book", description: "Comprehensive guide to JavaScript programming." },
-  { id: 4, name: "Cotton T-Shirt", price: 799, category: "clothing", image: "https://via.placeholder.com/200x150?text=T-Shirt", description: "Comfortable cotton t-shirt in various sizes." },
-  { id: 5, name: "Stainless Steel Water Bottle", price: 1299, category: "home", image: "https://via.placeholder.com/200x150?text=Water+Bottle", description: "Insulated water bottle that keeps drinks cold." },
-  { id: 6, name: "LED Desk Lamp", price: 1899, category: "home", image: "https://via.placeholder.com/200x150?text=Desk+Lamp", description: "Adjustable LED lamp for your workspace." },
-  { id: 7, name: "Fitness Tracker", price: 3499, category: "electronics", image: "https://via.placeholder.com/200x150?text=Fitness+Tracker", description: "Track your steps, heart rate, and more." },
-  { id: 8, name: "Coffee Maker", price: 2499, category: "home", image: "https://via.placeholder.com/200x150?text=Coffee+Maker", description: "Automatic coffee maker for perfect brews." },
-  { id: 9, name: "Denim Jeans", price: 1999, category: "clothing", image: "https://via.placeholder.com/200x150?text=Jeans", description: "Classic denim jeans in multiple fits." },
-  { id: 10, name: "Python Programming Book", price: 1699, category: "books", image: "https://via.placeholder.com/200x150?text=Python+Book", description: "Learn Python programming from basics to advanced." },
-  { id: 11, name: "Wireless Mouse", price: 899, category: "electronics", image: "https://via.placeholder.com/200x150?text=Mouse", description: "Ergonomic wireless mouse for productivity." },
-  { id: 12, name: "Yoga Mat", price: 1299, category: "home", image: "https://via.placeholder.com/200x150?text=Yoga+Mat", description: "Non-slip yoga mat for your practice." }
+  { id: 3, name: "JavaScript Programming Book", price: 1499, category: "books", image: "js book.jpg", description: "Comprehensive guide to JavaScript programming." },
+  { id: 4, name: "Cotton T-Shirt", price: 799, category: "clothing", image: "t-Shirt.jpg", description: "Comfortable cotton t-shirt in various sizes." },
+  { id: 5, name: "Stainless Steel Water Bottle", price: 1299, category: "home", image: "bottle.jpg", description: "Insulated water bottle that keeps drinks cold." },
+  { id: 6, name: "LED Desk Lamp", price: 1899, category: "home", image: "lamp.jpg", description: "Adjustable LED lamp for your workspace." },
+  { id: 7, name: "Fitness Tracker", price: 3499, category: "electronics", image: "smartwatch.jpg", description: "Track your steps, heart rate, and more." },
+  { id: 8, name: "Coffee Maker", price: 2499, category: "home", image: "Coffee.jpg", description: "Automatic coffee maker for perfect brews." },
+  { id: 9, name: "Denim Jeans", price: 1999, category: "clothing", image: "jeans.jpg", description: "Classic denim jeans in multiple fits." },
+  { id: 10, name: "Python Programming Book", price: 1699, category: "books", image: "python.jpg", description: "Learn Python programming from basics to advanced." },
+  { id: 11, name: "Wireless Mouse", price: 899, category: "electronics", image: "wireless.jpg", description: "Ergonomic wireless mouse for productivity." },
+  { id: 12, name: "Yoga Mat", price: 1299, category: "home", image: "yoga.jpg", description: "Non-slip yoga mat for your practice." },
+{ id: 13, name: "Running Shoes", price: 3999, category: "clothing", image: "shoes.jpg", description: "Lightweight running shoes for all terrains." },
+  { id: 14, name: "E-reader", price: 4999, category: "electronics", image: "ereader.jpg", description: "Portable e-reader with high-resolution display." },
+  { id: 15, name: "Blender", price: 2999, category: "home", image: "blender.jpg", description: "High-speed blender for smoothies and more." },
+  { id: 16, name: "Graphic T-Shirt", price: 899, category: "clothing", image: "graphic.jpg", description: "Trendy graphic t-shirt with unique designs." },
+  { id: 17, name: "Data Science Book", price: 1999, category: "books", image: "datascience.jpg", description: "Essential guide to data science concepts and techniques." },
+  { id: 18, name: "Smartwatch", price: 5999, category: "electronics", image: "watch.jpg", description: "Feature-packed smartwatch with fitness tracking." },
+  { id: 19, name: "Ceramic Mug", price: 499, category: "home", image: "mug.jpg", description: "Stylish ceramic mug for your favorite beverages." },
+  { id: 20, name: "Hiking Backpack", price: 3499, category: "clothing", image: "backpack.jpg", description: "Durable backpack designed for hiking and outdoor adventures." }
 ];
 
 let cart = JSON.parse(localStorage.getItem('amazonCart')) || [];
@@ -123,8 +131,9 @@ function handleSearch() {
 // Handle voice search functionality
 function handleVoiceSearch() {
   // Check if running on HTTPS (required for speech recognition in most browsers)
+  // Allow localhost for development
   if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-    alert('Voice search requires HTTPS. Please access the site over HTTPS or use localhost.');
+    alert('Voice search requires HTTPS. Please access the site over HTTPS or use localhost/127.0.0.1.');
     return;
   }
 
