@@ -111,6 +111,8 @@
               <button class="dropdown-item">Your Orders</button>
               <button class="dropdown-item">Your Lists</button>
               <button class="dropdown-item">Your Recommendations</button>
+              <div class="dropdown-divider logout-divider" style="display: none;"></div>
+              <button class="dropdown-item logout-btn" style="display: none;" onclick="handleLogout()">Sign Out</button>
             </div>
           </div>
         </div>
@@ -212,6 +214,12 @@
         </div>
         <div class="mobile-menu-content">
           <div class="mobile-menu-section">
+            <h3>Your Account</h3>
+            <button id="wishlist-btn-mobile" class="mobile-menu-link">Wishlist</button>
+            <button id="comparison-btn-mobile" class="mobile-menu-link">Compare Products</button>
+            <button id="cart-btn-mobile" class="mobile-menu-link">Cart (<span id="cart-count-mobile">0</span>)</button>
+          </div>
+          <div class="mobile-menu-section">
             <h3>Shop by Department</h3>
             <a href="#" class="mobile-menu-link">Electronics</a>
             <a href="#" class="mobile-menu-link">Books</a>
@@ -287,8 +295,200 @@
     </div>
   </div>
 
+  <!-- Authentication Modals -->
+  <div id="auth-modal" class="modal">
+    <div class="modal-content auth-modal">
+      <span class="close" id="auth-close">&times;</span>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="signup">Create Account</button>
+      </div>
+      <div id="login-form" class="auth-form active">
+        <h2>Sign In</h2>
+        <form id="login-form-element">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required>
+          </div>
+          <button type="submit" class="auth-submit">Sign In</button>
+        </form>
+      </div>
+      <div id="signup-form" class="auth-form">
+        <h2>Create Account</h2>
+        <form id="signup-form-element">
+          <div class="form-group">
+            <label for="signup-name">Name</label>
+            <input type="text" id="signup-name" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required>
+          </div>
+          <button type="submit" class="auth-submit">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wishlist Modal -->
+  <div id="wishlist-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="wishlist-close">&times;</span>
+      <h2>Your Wishlist</h2>
+      <div id="wishlist-items"></div>
+    </div>
+  </div>
+
+  <!-- Contact Form Modal -->
+  <div id="contact-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="contact-close">&times;</span>
+      <h2>Contact Us</h2>
+      <form id="contact-form">
+        <div class="form-group">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-subject">Subject</label>
+          <input type="text" id="contact-subject" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" required></textarea>
+        </div>
+        <button type="submit" class="contact-submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Product Comparison Modal -->
+  <div id="comparison-modal" class="modal">
+    <div class="modal-content comparison-modal">
+      <span class="close" id="comparison-close">&times;</span>
+      <h2>Compare Products</h2>
+      <div id="comparison-container"></div>
+    </div>
+  </div>
+
+  <!-- Quantity Selection Modal -->
+  <div id="quantity-modal" class="modal">
+    <div class="modal-content quantity-modal">
+      <span class="close" id="quantity-close">&times;</span>
+      <h2>Select Quantity</h2>
+      <div id="quantity-product-info"></div>
+      <div class="quantity-selector">
+        <button id="decrease-quantity">-</button>
+        <span id="quantity-value">1</span>
+        <button id="increase-quantity">+</button>
+      </div>
+      <button id="confirm-add-to-cart">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Notifications Container -->
+  <div class="notifications-container" id="notifications-container"></div>
+
   <!-- Footer -->
-  <footer class="footer">© 2026 Bamazone</footer>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Get to Know Us</h4>
+        <a href="#" class="footer-link">Careers</a>
+        <a href="#" class="footer-link">Blog</a>
+        <a href="#" class="footer-link">About Bamazone</a>
+        <a href="#" class="footer-link">Investor Relations</a>
+        <a href="#" class="footer-link">Bamazone Devices</a>
+      </div>
+      <div class="footer-section">
+        <h4>Make Money with Us</h4>
+        <a href="#" class="footer-link">Sell products on Bamazone</a>
+        <a href="#" class="footer-link">Sell apps on Bamazone</a>
+        <a href="#" class="footer-link">Become an Affiliate</a>
+        <a href="#" class="footer-link">Advertise Your Products</a>
+        <a href="#" class="footer-link">Self-Publish with Us</a>
+      </div>
+      <div class="footer-section">
+        <h4>Bamazone Payment Products</h4>
+        <a href="#" class="footer-link">Bamazone Business Card</a>
+        <a href="#" class="footer-link">Shop with Points</a>
+        <a href="#" class="footer-link">Reload Your Balance</a>
+        <a href="#" class="footer-link">Bamazone Currency Converter</a>
+      </div>
+      <div class="footer-section">
+        <h4>Let Us Help You</h4>
+        <a href="#" class="footer-link">Bamazone and COVID-19</a>
+        <a href="#" class="footer-link">Your Account</a>
+        <a href="#" class="footer-link">Your Orders</a>
+        <a href="#" class="footer-link">Shipping Rates & Policies</a>
+        <a href="#" class="footer-link">Returns & Replacements</a>
+        <a href="#" class="footer-link">Manage Your Content and Devices</a>
+        <a href="#" class="footer-link">Bamazone Assistant</a>
+        <a href="#" class="footer-link">Help</a>
+      </div>
+      <div class="footer-section newsletter-section">
+        <h4>Newsletter Signup</h4>
+        <p>Get exclusive deals and updates</p>
+        <form id="newsletter-form" class="newsletter-form">
+          <input type="email" id="newsletter-email" placeholder="Enter your email" required>
+          <button type="submit" class="newsletter-submit">Subscribe</button>
+        </form>
+        <div class="social-links">
+          <a href="#" class="social-link">Facebook</a>
+          <a href="#" class="social-link">Twitter</a>
+          <a href="#" class="social-link">Instagram</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="footer-language">
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </div>
+        <div class="footer-currency">
+          <select id="currency-select">
+            <option value="INR">₹ INR</option>
+            <option value="USD">$ USD</option>
+            <option value="EUR">€ EUR</option>
+            <option value="GBP">£ GBP</option>
+          </select>
+        </div>
+        <div class="footer-country">
+          <select id="country-select">
+            <option value="IN">India</option>
+            <option value="US">United States</option>
+            <option value="UK">United Kingdom</option>
+            <option value="CA">Canada</option>
+          </select>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <p>© 2026 Bamazone.com, Inc. or its affiliates</p>
+        <div class="footer-legal">
+          <a href="#" class="footer-legal-link">Conditions of Use</a>
+          <a href="#" class="footer-legal-link">Privacy Notice</a>
+          <a href="#" class="footer-legal-link">Interest-Based Ads</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script src="pro.js"></script>
 </body>
